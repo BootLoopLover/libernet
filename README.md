@@ -5,10 +5,17 @@ Libernet is open source web app for tunneling internet using SSH, V2Ray, Trojan,
   <img src="https://i.ibb.co/ccZHLCR/Screenshot-from-2022-02-22-13-50-31.png" alt="dashboard" />
 </p>
 
+#Installation
 ```
 curl -fsSL -o install-libernet-clean.sh https://raw.githubusercontent.com/BootLoopLover/libernet/main/install-libernet-clean.sh
 chmod +x install-libernet-clean.sh
 ./install-libernet-clean.sh
+```
+
+```
+wget https://raw.githubusercontent.com/BootLoopLover/libernet/refs/heads/main/install-libernet-clean.sh
+sh install-libernet-clean.sh
+#done
 ```
 
 ## Requirements

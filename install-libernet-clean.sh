@@ -1,18 +1,21 @@
 #!/bin/bash
 
-# Pastikan dijalankan sebagai root
+# 🚨 Pastikan dijalankan sebagai root
 if [ "$(id -u)" != "0" ]; then
-  echo "Skrip ini harus dijalankan sebagai root."
+  echo "❌ Skrip ini harus dijalankan sebagai root (sudo)."
   exit 1
 fi
 
-# Install bash & curl
+# 🔄 Update dan install bash & curl
+echo "📦 Mengupdate paket dan menginstal bash & curl..."
 opkg update && opkg install bash curl
 
-# Jalankan installer Libernet resmi
+# ⬇️ Jalankan installer Libernet resmi
+echo "📥 Mengunduh dan menjalankan installer Libernet..."
 bash -c "$(curl -fsSL 'https://raw.githubusercontent.com/BootLoopLover/libernet/main/install.sh')"
 
-# Tambahkan menu Luci
+# 🧩 Tambahkan menu LuCI untuk Libernet
+echo "🛠️  Menambahkan menu Libernet ke LuCI..."
 cat <<'EOF' > /usr/lib/lua/luci/controller/libernet.lua
 module("luci.controller.libernet", package.seeall)
 function index()
@@ -31,17 +34,20 @@ document.getElementById("libernet").src = "http://" + window.location.hostname +
 <%+footer%>
 EOF
 
-# Hapus baris autentikasi dari file PHP Libernet
+# 🧹 Hapus autentikasi dari file PHP Libernet
+echo "🧼 Membersihkan autentikasi dari file PHP..."
 for file in index.php config.php about.php speedtest.php system.php; do
   target="/www/libernet/$file"
   if [ -f "$target" ]; then
-    echo "[✔] Membersihkan $file ..."
+    echo "✅ Membersihkan $file ..."
     sed -i '/include[[:space:]]*(["'"'"']auth.php["'"'"'])[[:space:]]*;/d' "$target"
     sed -i '/check_session[[:space:]]*(.*)[[:space:]]*;/d' "$target"
   else
-    echo "[⚠️] File tidak ditemukan: $target"
+    echo "⚠️  File tidak ditemukan: $target"
   fi
 done
 
-echo -e "\n✅ Libernet telah dipasang dan dibersihkan dari login. Silakan akses melalui LuCI → Services → Libernet atau buka http://<IP-Router>/libernet"
-
+# 📢 Selesai
+echo -e "\n🎉 ${GREEN}Libernet telah dipasang dan dibersihkan dari login!${NC}"
+echo -e "🌐 Silakan akses melalui: ${YELLOW}LuCI → Services → Libernet${NC}"
+echo -e "atau buka langsung: ${YELLOW}http://<IP-Router>/libernet${NC}"
